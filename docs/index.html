@@ -173,7 +173,7 @@ function render(){
     $v.appendChild(back(2));
   }else if(S.step===4){
     $v.appendChild(dots(4));
-    var sm=el("div",{"class":"summary"});sm.appendChild(el("b",{"data-focus":"1",text:S.slot.d+" at "+S.slot.l}));sm.appendChild(document.createTextNode("Bangkok time"));sm.appendChild(el("br"));
+    var sm=el("div",{"class":"summary"});sm.appendChild(el("b",{"data-focus":"1",text:S.slot.d+" at "+S.slot.l.replace(" ","\u00a0")}));sm.appendChild(document.createTextNode("Bangkok time"));sm.appendChild(el("br"));
     var ch=el("button",{type:"button",text:"Change time"});ch.onclick=function(){S.step=3;render()};sm.appendChild(ch);$v.appendChild(sm);
     var f=el("form",{novalidate:"novalidate",autocomplete:"on"});
     f.appendChild(el("label",{"for":"fn",text:"First name"}));f.appendChild(el("input",{id:"fn",name:"first_name",type:"text",autocomplete:"given-name",maxlength:"60",required:"required"}));
@@ -232,7 +232,7 @@ function render(){
     var j=S.done,d=el("div",{"class":"done"});
     d.appendChild(el("div",{"class":"tick","aria-hidden":"true",text:"✓"}));
     d.appendChild(el("p",{"class":"q","data-focus":"1",text:"You're booked, "+j.first+"."}));
-    d.appendChild(el("p",{"class":"when",text:j.day+" at "+j.time}));
+    d.appendChild(el("p",{"class":"when",text:j.day+" at "+j.time.replace(" ","\u00a0")}));
     d.appendChild(el("p",{"class":"tz",text:"Bangkok time"}));
     var w=el("div",{"class":"where"});w.appendChild(el("b",{text:"Where"}));w.appendChild(el("br"));w.appendChild(document.createTextNode(j.address+". "));w.appendChild(el("br"));
     w.appendChild(el("a",{href:j.map,target:"_blank",rel:"noopener",text:"Open in Google Maps"}));w.appendChild(document.createTextNode(" · "));w.appendChild(el("a",{href:j.directions,target:"_blank",rel:"noopener",text:"Directions with photos"}));
