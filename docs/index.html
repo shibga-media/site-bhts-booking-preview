@@ -120,7 +120,7 @@ footer a{color:var(--goldd)}
 <script>
 (function(){
 "use strict";
-var API="https://desk.5-223-88-156.sslip.io/hooks/book";
+var API="https://desk.5-223-88-156.sslip.io/hooks/book";var T0=Date.now();
 var SHOP_WA="https://wa.me/6624609565";
 var SHOW_PLACEHOLDERS=true;   // Shib: set false once real photos are in (or to hide the boxes)
 var LOOKS=[["natural-hairline","A natural hairline"],["more-on-top","More hair on top"],["full-head","A full head of hair"],["not-sure","Not sure yet"]];
@@ -181,7 +181,7 @@ function render(){
     f.appendChild(el("p",{"class":"hint",text:"Include the country code if it's not a Thai number."}));
     var le=el("label",{"for":"em"});le.appendChild(document.createTextNode("Email "));le.appendChild(el("span",{"class":"opt-t",text:"(optional)"}));f.appendChild(le);
     f.appendChild(el("input",{id:"em",name:"email",type:"email",autocomplete:"email",maxlength:"120"}));
-    f.appendChild(el("div",{"class":"hp","aria-hidden":"true"},[el("label",{"for":"co",text:"Company"}),el("input",{id:"co",name:"company",type:"text",tabindex:"-1",autocomplete:"off"})]));
+    
     var go=el("button",{type:"submit","class":"cta",text:"Book my visit"});f.appendChild(go);
     var er=el("p",{"class":"err",role:"alert"});f.appendChild(er);
     f.appendChild(el("p",{"class":"fine",text:"We use your details only to confirm your visit."}));
@@ -191,7 +191,7 @@ function render(){
       if(ph.replace(/\D/g,"").length<8){er.textContent="Please add a phone number we can reach you on.";f.phone.focus();return}
       if(em&&!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(em)){er.textContent="That email address doesn't look right.";f.email.focus();return}
       go.disabled=true;go.textContent="Booking...";
-      api("/book",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({first_name:fn,phone:ph,email:em,slot:S.slot.t,look:S.look,where:S.where,company:f.company.value,utm:utm})}).then(function(j){
+      api("/book",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({first_name:fn,phone:ph,email:em,slot:S.slot.t,look:S.look,where:S.where,elapsed:Date.now()-T0,utm:utm})}).then(function(j){
         if(j.ok){S.done=j;S.step="done";track("Schedule");render();return}
         go.disabled=false;go.textContent="Book my visit";
         if(j.error==="slot_gone"){er.textContent=j.message;S.slot=null;S.days=null;setTimeout(function(){S.step=3;render()},1800);return}
@@ -207,7 +207,7 @@ function render(){
     f2.appendChild(el("label",{"for":"vn",text:"First name"}));f2.appendChild(el("input",{id:"vn",name:"first_name",type:"text",autocomplete:"given-name",maxlength:"60"}));
     f2.appendChild(el("label",{"for":"vp",text:"WhatsApp / phone number or email"}));f2.appendChild(el("input",{id:"vp",name:"contact",type:"text",autocomplete:"off",maxlength:"120",placeholder:"+44 7700 900123"}));
     f2.appendChild(el("label",{"for":"vw",text:"When will you be in Bangkok?"}));f2.appendChild(el("input",{id:"vw",name:"when",type:"text",maxlength:"200",placeholder:"e.g. first week of December"}));
-    f2.appendChild(el("div",{"class":"hp","aria-hidden":"true"},[el("label",{"for":"vc",text:"Company"}),el("input",{id:"vc",name:"company",type:"text",tabindex:"-1",autocomplete:"off"})]));
+    
     var go2=el("button",{type:"submit","class":"cta",text:"Send"});f2.appendChild(go2);
     var er2=el("p",{"class":"err",role:"alert"});f2.appendChild(er2);
     f2.onsubmit=function(ev){ev.preventDefault();er2.textContent="";
@@ -216,7 +216,7 @@ function render(){
       var isMail=c.indexOf("@")>-1;
       if(!isMail&&c.replace(/\D/g,"").length<8){er2.textContent="Please add a phone number (with country code) or an email.";return}
       go2.disabled=true;go2.textContent="Sending...";
-      api("/visiting",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({first_name:fn,phone:isMail?"":c,email:isMail?c:"",when:w,where:S.where,look:S.look,company:f2.company.value})}).then(function(j){
+      api("/visiting",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({first_name:fn,phone:isMail?"":c,email:isMail?c:"",when:w,where:S.where,look:S.look,elapsed:Date.now()-T0})}).then(function(j){
         if(j.ok){S.done={first:j.first};S.step="vdone";track("Lead");render();return}
         go2.disabled=false;go2.textContent="Send";er2.textContent=j.error||"Something went wrong. Please message us on WhatsApp.";
       }).catch(function(){go2.disabled=false;go2.textContent="Send";er2.textContent="No connection. Please try again."});
